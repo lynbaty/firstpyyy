@@ -1,4 +1,4 @@
-from sqlmodel import Session
+from sqlmodel import Session, select
 
 import models
 
@@ -14,3 +14,9 @@ def create_user(db: Session, user: models.UserCreate):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+
+def get_user_by_email(db: Session, email: str) -> models.User | None:
+    statement = select(models.User).where(models.User.email == email)
+    session_user = Session.exec(statement).first()
+    return session_user
